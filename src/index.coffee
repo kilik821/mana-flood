@@ -22,14 +22,14 @@ app.configure 'production', 'development', 'testing', ->
 if app.settings.env != 'production'
   mongoose.connect 'mongodb://localhost/example'
 else
-  console.log('If you are running in production, you may want to modify the mongoose connect path')
+  mongoose.connect 'mongodb://nodejitsu:987e79cd69426657761c86780f84bdf6@alex.mongohq.com:10057/nodejitsudb7142908009'
 
 #### View initialization 
 # Add Connect Assets.
 app.use assets()
 # Set the public folder as static assets.
 app.use express.static(process.cwd() + '/public')
- 
+
 
 # Set View Engine.
 app.set 'view engine', 'jade'
