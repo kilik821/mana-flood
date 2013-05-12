@@ -11,12 +11,3 @@ describe 'General', ->
         .expect(200, {},
                 done
         )
-
-  describe "Bad Routing", ->
-    it "should not be here", (done) ->
-      request(app)
-        .get('/nonexistent/action')
-        .send( {} )
-        .expect(404, {},
-                done
-        )

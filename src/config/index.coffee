@@ -27,3 +27,5 @@ exports.setEnvironment = (env) ->
       exports.DEBUG_CLIENT = false
     else
       console.log "environment #{env} not found"
+
+exports.secret = '98q1eq98e18984qe'

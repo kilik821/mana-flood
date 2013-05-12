@@ -14,6 +14,9 @@
     , "which": "1.0.5"
     , "mongoose": "3.6.x"
     , "wrench": "1.4.4"
+    , "passport": "0.1.16"
+    , "crypto": "0.0.3"
+    , "passport-local": "0.1.6"
   }, "scripts": {
     "install": "node node_modules/coffee-script/bin/cake build",
     "start": "node server.js",

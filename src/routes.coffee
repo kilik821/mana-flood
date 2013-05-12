@@ -5,27 +5,51 @@
 # We are using method names to determine controller actions for clearness.
 
 module.exports = (app) ->
-  #   - _/_ -> controllers/index/index method
-  app.all '/', (req, res, next) ->
-    routeMvc('index', 'index', req, res, next)
+  app.get '/partials/:name', (req, res, next) ->
+    res.render 'partials/' + req.params.name
+    do next
 
-  #   - _/**:controller**_  -> controllers/***:controller***/index method
-  app.all '/:controller', (req, res, next) ->
+  app.get '/api/:controller', (req, res, next) ->
     routeMvc(req.params.controller, 'index', req, res, next)
 
-  #   - _/**:controller**/**:method**_ -> controllers/***:controller***/***:method*** method
-  app.all '/:controller/:method', (req, res, next) ->
+  app.post '/api/:controller', (req, res, next) ->
+    routeMvc(req.params.controller, 'create', req, res, next)
+
+  app.get '/api/:controller/:id', (req, res, next) ->
+    routeMvc(req.params.controller, 'get', req, res, next)
+
+  app.put '/api/:controller/:id', (req, res, next) ->
+    routeMvc(req.params.controller, 'update', req, res, next)
+
+  app.delete '/api/:controller/:id', (req, res, next) ->
+    routeMvc(req.params.controller, 'delete', req, res, next)
+
+  app.post '/api/:controller/:id/:method', (req, res, next) ->
     routeMvc(req.params.controller, req.params.method, req, res, next)
 
-  #   - _/**:controller**/**:method**/**:id**_ -> controllers/***:controller***/***:method*** method with ***:id*** param passed
-  app.all '/:controller/:method/:id', (req, res, next) ->
-    routeMvc(req.params.controller, req.params.method, req, res, next)
+  app.all '/api/*', (req, res, next) ->
+    res.status 404
+    res.send 'Route not found'
 
-  # If all else failed, show 404 page
+#  #   - _/_ -> controllers/index/index method
+#  app.all '/api', (req, res, next) ->
+#    routeMvc('index', 'index', req, res, next)
+#
+#  #   - _/**:controller**_  -> controllers/***:controller***/index method
+#  app.all '/api/:controller', (req, res, next) ->
+#    routeMvc(req.params.controller, 'index', req, res, next)
+#
+#  #   - _/**:controller**/**:method**_ -> controllers/***:controller***/***:method*** method
+#  app.all '/api/:controller/:method', (req, res, next) ->
+#    routeMvc(req.params.controller, req.params.method, req, res, next)
+#
+#  #   - _/**:controller**/**:method**/**:id**_ -> controllers/***:controller***/***:method*** method with ***:id*** param passed
+#  app.all '/api/:controller/:method/:id', (req, res, next) ->
+#    routeMvc(req.params.controller, req.params.method, req, res, next)
+
+  # If all else failed, show index page
   app.all '/*', (req, res) ->
-    console.warn "error 404: ", req.url
-    res.statusCode = 404
-    res.render '404', 404
+    res.render 'index'
 
 # render the page based on controller name, method and id
 routeMvc = (controllerName, methodName, req, res, next) ->
