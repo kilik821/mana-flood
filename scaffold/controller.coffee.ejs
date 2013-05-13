@@ -45,5 +45,12 @@ module.exports =
       else
         res.send err
         res.statusCode = 500
-      
-  
+
+isAllowed = (objectId, userId, permission, next) ->
+  <%=: name | capitalize %>.findById objectId, (err, object) ->
+    return next err if err?
+    return next null, true if object? and object.access permission + ':' + userId
+    return next null, false
+
+publicize = (object) ->
+  object.publicView

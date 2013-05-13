@@ -24,19 +24,19 @@ module.exports = (app) ->
     passport.authenticate('local', (err, user, info) ->
       return next err if err?
       return res.send 401, info.message unless user?
-      user.markLogin (err) ->
+      user.markLogin()
+      return next err if err?
+      req.logIn user, (err) ->
         return next err if err?
-        req.logIn user, (err) ->
-          return next err if err?
-          return res.send 200, user.publicView
+        return res.send 200, user.publicView
     )(req, res, next)
 
   app.get '/logout', (req, res, next) ->
     if req.user?
-      req.user.markLogout (err) ->
-        return next err if err?
-        req.logout()
-        res.send 200
+      req.user.markLogout
+      return next err if err?
+      req.logout()
+      res.send 200
     else
       req.logout()
       res.send 200

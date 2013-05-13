@@ -1,5 +1,6 @@
 mongoose = require 'mongoose'
 crypto = require 'crypto'
+troop = require 'mongoose-troop'
 
 # User model
 validatePresenceOf = (value) ->
@@ -9,7 +10,7 @@ re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{
 validateEmailRegex = (value) ->
   re.test value
 
-publicFields = ['username', 'online', 'id']
+publicFields = ['username', 'online', '_id']
 adminFields = publicFields.concat ['email']
 
 userSchema =
@@ -22,12 +23,6 @@ userSchema =
     index:
       unique: true
     required: true
-  dateCreated:
-    type: Date
-    "default": Date.now
-  lastLogin:
-    type: Date
-    "default": Date.now
   username:
     type: String
     index:
@@ -39,6 +34,12 @@ userSchema =
   salt:
     type: String
     select: true
+  dateCreated:
+    type: Date
+    "default": Date.now
+  lastLogin:
+    type: Date
+    "default": Date.now
   online:
     type: Boolean
     "default": false
@@ -73,13 +74,13 @@ User.virtual('publicView').get ->
     copy[field] = @[field]
   copy
 
-User.method 'markLogin', (cb) ->
+User.method 'markLogin', () ->
   @lastLogin = Date.now()
   @online = true
-  @save cb
 
-User.method 'markLogout', (cb) ->
+User.method 'markLogout', () ->
   @online = false
-  @save cb
+
+User.plugin troop.acl
 
 module.exports = mongoose.model 'User', User

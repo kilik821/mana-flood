@@ -17,6 +17,7 @@
     , "passport": "0.1.16"
     , "crypto": "0.0.3"
     , "passport-local": "0.1.6"
+    , "mongoose-troop": "0.0.8"
   }, "scripts": {
     "install": "node node_modules/coffee-script/bin/cake build",
     "start": "node server.js",
