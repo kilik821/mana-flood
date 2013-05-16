@@ -1,0 +1,22 @@
+div.span6.offset3
+    form.form-horizontal(ng-submit="login()", name="loginForm")
+        h3 Login
+        p Enter your login information here.
+        .alert-info.alert(ng-animate="{hide: 'fade-out'}", ng-hide="!shown", ng-init="shown = true")
+          | Don't have an account? <em><a href="/register">Register here</a></em>.
+          button(type="button", class="close", ng-click="shown = !shown") &times;
+        div.control-group
+            label.control-label(for="inputUsername") Username
+            div.controls
+                input.input(type="text", placeholder="Username", ng-model="loggingIn.username", id="inputUsername", required)
+        div.control-group
+            label.control-label(for="inputPassword") Password
+            div.controls
+                input.input(type="password", placeholder="Password", ng-model="loggingIn.password", id="inputPassword", required)
+        div.control-group
+            div.controls
+                label.checkbox(for="remember") Remember
+                    input(type="checkbox", ng-model="loggingIn.remember", id="remember")
+        div.control-group
+            div.controls
+                input.btn.btn-primary(type="submit", ng-disabled="loginForm.$invalid", value="Log In")

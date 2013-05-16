@@ -1,41 +1,50 @@
 {
-    "name": "express-coffee"
-  , "version": "0.1.8"
-  , "private": true
-  , "dependencies": {
-      "express": "3.x" 
-    , "coffee-script": "1.6.x"
-    , "jade": "0.30.x"
-    , "connect-assets": "2.4.0"
-    , "stylus": "0.32.x"
-    , "nib": "0.9.x"
-    , "markdown": "0.4.0"
-    , "passport": "0.1.16"
-    , "which": "1.0.5"
-    , "mongoose": "3.6.x"
-    , "wrench": "1.4.4"
-    , "passport": "0.1.16"
-    , "crypto": "0.0.3"
-    , "passport-local": "0.1.6"
-    , "mongoose-troop": "0.0.8"
-  }, "scripts": {
-    "install": "node node_modules/coffee-script/bin/cake build",
-    "start": "node server.js",
-    "test": "mocha --require should --compilers coffee:coffee-script --colors"
-  }, "devDependencies": {
-      "coffee-script": "*"
-    , "mocha": "*"
-    , "should": "*"
-    , "supertest": "*"
-    , "request": "*"
-    , "supervisor": "*"
-    , "docco-husky": "*"
-    , "puts": "*"
-    , "node-inspector": "*"
-    , "ejs": "*"
-  }, 
-  "engines": {
-    "node": "~0.10.x",
-    "npm": "1.2.x"
-  }
+    "name": "ManaFlood",
+    "version": "0.0.1-4",
+    "subdomain": "mana-flood",
+    "domains": [
+        "manaflood.com",
+        "www.manaflood.com",
+        "fanficcentral.com",
+        "www.fanficcentral.com"
+    ],
+    "author": "Shelby Doolittle <shelbyhosts@gmail.com>",
+    "description": "All purpose Magic: the Gathering website.",
+    "dependencies": {
+        "express": "3.x",
+        "coffee-script": "1.6.x",
+        "jade": "0.30.x",
+        "connect-assets": "2.4.0",
+        "stylus": "0.32.x",
+        "nib": "0.9.x",
+        "markdown": "0.4.0",
+        "passport": "0.1.16",
+        "which": "1.0.5",
+        "mongoose": "3.6.x",
+        "connect-mongo": "0.3.x",
+        "wrench": "1.4.4",
+        "crypto": "0.0.3",
+        "passport-local": "0.1.6",
+        "mongoose-troop": "0.0.8",
+        "tutor": "0.4.x"
+    },
+    "scripts": {
+        "install": "node node_modules/coffee-script/bin/cake build",
+        "start": "node server.js"
+    },
+    "devDependencies": {
+        "coffee-script": "*",
+        "mocha": "*",
+        "should": "*",
+        "supertest": "*",
+        "request": "*",
+        "supervisor": "*",
+        "puts": "*",
+        "node-inspector": "*",
+        "ejs": "*"
+    },
+    "engines": {
+        "node": "0.8.x",
+        "npm": "1.2.x"
+    }
 }

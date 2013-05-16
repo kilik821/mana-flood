@@ -5,46 +5,55 @@ module.exports =
 
   # Lists all <%=: name %>s
   index: (req, res) ->
-    <%=: name | capitalize %>.find {}, (err, <%=: name %>s) ->
-      res.send <%=: name %>s
+    <%=: name | capitalize %>.find {"public": true}, (err, <%=: name %>s) ->
+      res.send <%=: name %>s.map(publicize)
       
   # Creates new <%=: name %> with data from `req.body`
   create: (req, res) ->
-    <%=: name %> = new <%=: name | capitalize %> req.body
-    <%=: name %>.save (err, <%=: name %>) ->
-      if not err
-        res.send <%=: name %>
-        res.statusCode = 201
-      else
-        res.send err
-        res.statusCode = 500
-        
+    if req.user?
+      userId = req.user._id
+      <%=: name %> = new <%=: name | capitalize %> <%=: name | capitalize %>.editable req.body
+      <%=: name %>.author = userId
+      <%=: name %>.addAccess 'view:' + userId
+      <%=: name %>.addAccess 'update:' + userId
+      <%=: name %>.addAccess 'delete:' + userId
+      <%=: name %>.save (err, <%=: name %>) ->
+        unless err?
+          res.send 201, <%=: name %>
+        else res.send 500, err
+
   # Gets <%=: name %> by id
   get: (req, res) ->
     <%=: name | capitalize %>.findById req.params.id, (err, <%=: name %>) ->
-      if not err
-        res.send <%=: name %>
-      else
-        res.send err
-        res.statusCode = 500
-             
+      unless err?
+        if <%=: name %>.public or <%=: name %>.access 'view:' + req.user._id
+          res.send publicize(<%=: name %>)
+        else res.send 404
+      else res.send 500, err
+
   # Updates <%=: name %> with data from `req.body`
   update: (req, res) ->
-    <%=: name | capitalize %>.findByIdAndUpdate req.params.id, {"$set":req.body}, (err, <%=: name %>) ->
-      if not err
-        res.send <%=: name %>
-      else
-        res.send err
-        res.statusCode = 500
-    
+    if req.user?
+      isAllowed req.user._id, req.params.id, 'update', (err, allowed) ->
+        if allowed
+          <%=: name | capitalize %>.findByIdAndUpdate req.params.id, {"$set":<%=: name | capitalize %>.editable(req.body)}, (err, <%=: name %>) ->
+            unless err?
+              res.send publicize(<%=: name %>)
+            else res.send 500, err
+        else res.send 401, 'Unauthorized'
+    else res.send 401, 'Login required'
+
   # Deletes <%=: name %> by id
   delete: (req, res) ->
-    <%=: name | capitalize %>.findByIdAndRemove req.params.id, (err) ->
-      if not err
-        res.send {}
-      else
-        res.send err
-        res.statusCode = 500
+    if req.user?
+      isAllowed req.user._id, req.params.id, 'delete', (err, allowed) ->
+        if allowed
+          <%=: name | capitalize %>.findByIdAndRemove req.params.id, (err) ->
+            unless err?
+              res.send 200
+            else res.send 500, err
+        else res.send 401, 'Unauthorized'
+    else res.send 401, 'Login required'
 
 isAllowed = (objectId, userId, permission, next) ->
   <%=: name | capitalize %>.findById objectId, (err, object) ->
@@ -53,4 +62,4 @@ isAllowed = (objectId, userId, permission, next) ->
     return next null, false
 
 publicize = (object) ->
-  object.publicView
+  object.publicView ? {}

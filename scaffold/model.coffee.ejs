@@ -1,8 +1,33 @@
 mongoose = require 'mongoose'
+troop = require 'mongoose-troop'
+
+Schema = mongoose.Schema
+ObjectId = Schema.Types.ObjectId
 
 # <%=: name | capitalize %> model
-<%=: name | capitalize %> = new mongoose.Schema(
+<%=: name | capitalize %> = new mongoose.Schema
   someField: String
-)
+
+<%=: name | capitalize %>.statics.publicFields = publicFields = []
+<%=: name | capitalize %>.statics.adminFields = adminFields = []
+<%=: name | capitalize %>.statics.editableFields = editableFields = []
+
+<%=: name | capitalize %>.virtual('publicView').get ->
+  copy = {}
+  for field in publicFields
+    copy[field] = @[field] if @[field]?
+  copy
+
+<%=: name | capitalize %>.virtual('adminView').get ->
+  copy = @publicView
+  for field in adminFields
+    copy[field] = @[field] if @[field]?
+  copy
+
+<%=: name | capitalize %>.statics.editable (<%=: name %>) ->
+  new<%=: name | capitalize %> = {}
+  for field in editableFields
+    new<%=: name | capitalize %>[field] = <%=: name %>[field] if <%=: name %>[field]?
+  new<%=: name | capitalize %>
 
 module.exports = mongoose.model '<%=: name | capitalize %>', <%=: name | capitalize %>

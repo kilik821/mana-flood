@@ -1,0 +1,33 @@
+div.span6.offset3
+  form.form-horizontal(ng-submit="register()", name="registerForm", novalidate)
+    h3 Register
+    .alert-info.alert(ng-animate="{hide: 'fade-out'}", ng-hide="!shown", ng-init="shown = true")
+      button(type="button", class="close", ng-click="shown = !shown") &times;
+      p Already have an account? <em><a href="/register">Login here</a></em>.
+    div.control-group(ng-class="{error: registerForm.inputEmail.$invalid}")
+      label.control-label(for="inputEmail") Email
+      div.controls
+        input.input(type="email", placeholder="example@example.com", ng-model="registering.email", id="inputEmail", name="inputEmail", required)
+    div.control-group(ng-class="{error: registerForm.emailConfirm.$invalid}")
+      label.control-label(for="emailConfirm") Confirm Email
+      div.controls
+        input.input(type="email", placeholder="", ng-model="emailConfirm", name="emailConfirm", id="emailConfirm", mtg-equal="inputEmail", required)
+    div.control-group(ng-class="{error: registerForm.inputUsername.$invalid}",
+      data-container="body", data-toggle="tooltip", data-placement="right", title="Usernames must be four or more alphanumeric characters.")
+      label.control-label(for="inputUsername") Username
+      div.controls
+        input.input(type="text", placeholder="example416", ng-model="registering.username", id="inputUsername", name="inputUsername", ng-pattern="/^[a-zA-Z][a-zA-Z0-9]{3,}$/", required)
+    div.control-group(ng-class="{error: registerForm.inputPassword.$invalid}")
+      label.control-label(for="inputPassword") Password
+      div.controls
+        input.input(type="password", placeholder="", ng-model="registering.password", id="inputPassword", name="inputPassword", ng-pattern="/^.{8,}$/", required)
+    div.control-group(ng-class="{error: registerForm.passwordConfirm.$invalid}")
+      label.control-label(for="passwordConfirm") Confirm Password
+      div.controls
+        input.input(type="password", placeholder="", ng-model="passwordConfirm", id="passwordConfirm", name="passwordConfirm", mtg-equal="inputPassword", required)
+    div.control-group
+      div.controls
+        input.btn.btn-primary(type="submit", ng-disabled="registerForm.$invalid", value="Register")
+    div.control-group
+      div.controls
+        button.btn(type="reset") Reset

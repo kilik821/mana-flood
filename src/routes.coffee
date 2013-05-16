@@ -5,9 +5,8 @@
 # We are using method names to determine controller actions for clearness.
 
 module.exports = (app) ->
-  app.get '/partials/:name', (req, res, next) ->
-    res.render 'partials/' + req.params.name
-    do next
+  app.get /\/partials\/(.+)/, (req, res, next) ->
+    res.render 'partials/' + req.params[0]
 
   app.get '/api/:controller', (req, res, next) ->
     routeMvc(req.params.controller, 'index', req, res, next)
@@ -15,16 +14,22 @@ module.exports = (app) ->
   app.post '/api/:controller', (req, res, next) ->
     routeMvc(req.params.controller, 'create', req, res, next)
 
+  app.all '/api/:controller/all/:method', (req, res, next) ->
+    routeMvc(req.params.controller, req.params.method, req, res, next)
+
   app.get '/api/:controller/:id', (req, res, next) ->
     routeMvc(req.params.controller, 'get', req, res, next)
 
   app.put '/api/:controller/:id', (req, res, next) ->
     routeMvc(req.params.controller, 'update', req, res, next)
 
+  app.post '/api/:controller/:id', (req, res, next) ->
+    routeMvc(req.params.controller, 'update', req, res, next)
+
   app.delete '/api/:controller/:id', (req, res, next) ->
     routeMvc(req.params.controller, 'delete', req, res, next)
 
-  app.post '/api/:controller/:id/:method', (req, res, next) ->
+  app.all '/api/:controller/:id/:method', (req, res, next) ->
     routeMvc(req.params.controller, req.params.method, req, res, next)
 
   app.all '/api/*', (req, res, next) ->
