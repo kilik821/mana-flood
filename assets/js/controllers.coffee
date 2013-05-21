@@ -59,8 +59,7 @@ module.controller 'NavCtrl', ['$rootScope', '$scope', '$location', ($rootScope, 
           return $scope.selected = link
     $scope.selected = $scope.mainLinks[0]
 
-  url = $location.path()
-  setSelected url
+  setSelected $location.path()
 
   $rootScope.$on '$routeChangeSuccess', (event, current, previous) ->
     setSelected $location.path()

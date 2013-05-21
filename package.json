@@ -1,6 +1,6 @@
 {
     "name": "ManaFlood",
-    "version": "0.0.1-13",
+    "version": "0.0.1-27",
     "subdomain": "mana-flood",
     "domains": [
         "manaflood.com",
@@ -13,7 +13,7 @@
     "dependencies": {
         "express": "3.x",
         "coffee-script": "1.6.x",
-        "iced-coffee-script": "1.6.x",
+        "iced-coffee-script": "1.4.x",
         "jade": "0.30.x",
         "connect-assets": "2.4.0",
         "stylus": "0.32.x",
@@ -30,7 +30,7 @@
         "tutor": "0.4.x"
     },
     "scripts": {
-        "install": "node node_modules/iced-coffee-script/bin/cake build;iced -c -o .app src/update.iced",
+        "install": "cake build",
         "start": "node server.js"
     },
     "devDependencies": {

@@ -20,7 +20,7 @@ log = (message, color, explanation) ->
 
 # Compiles app.coffee and src directory to the .app directory
 build = (callback) ->
-  options = ['-c','-b', '-o', '.app', 'src']
+  options = ['-c', '-o', '.app', 'src'] # Removed '-b'
   cmd = which.sync 'iced'
   coffee = spawn cmd, options
   coffee.stdout.pipe process.stdout
