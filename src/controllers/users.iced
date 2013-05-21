@@ -5,7 +5,8 @@ module.exports =
 
   # Lists all users
   index: (req, res) ->
-    User.find {}, (err, users) ->
+    where = User.publicSearch req.whereParams
+    User.find where, req.searchFields, req.searchOptions, (err, users) ->
       res.send users.map(publicize)
       
   # Creates new user with data from `req.body`
@@ -20,7 +21,7 @@ module.exports =
 
   # Gets user by id
   get: (req, res) ->
-    User.findById req.params.id, (err, user) ->
+    User.findById req.params.id, req.searchFields, (err, user) ->
       unless err?
         res.send publicize(user)
       else res.send 500, err
@@ -56,29 +57,29 @@ module.exports =
 
   addUserRole: (req, res) ->
     if req.user?
-      if ['editUserRoles'] in req.user.roles
-        if req.params.role?
-          User.findByIdAndUpdate req.params.id, {$push: {roles: req.params.role}}, (err) ->
+      if 'editUserRoles' in req.user.roles
+        if req.query.role?
+          User.findByIdAndUpdate req.params.id, {$addToSet: {roles: req.query.role}}, (err) ->
             unless err?
               res.send 200
             else res.send 500, err
-        else res.send 400, 'Requries role parameter'
+        else res.send 400, 'Requries role query'
       else res.send 401, 'Unauthorized'
     else res.send 401, 'Login required'
 
   removeUserRole: (req, res) ->
     if req.user?
-      if ['editUserRoles'] in req.user.roles
-        if req.params.role?
+      if 'editUserRoles' in req.user.roles
+        if req.query.role?
           User.findById req.params.id, (err, user) ->
             unless err?
-              user.roles.remove req.params.role
+              user.roles.remove req.query.role
               user.save (err) ->
                 unless err?
                   res.send 200
                 else res.send 500, err
             else res.send 500, err
-        else res.send 400, 'Requries role parameter'
+        else res.send 400, 'Requries role query'
       else res.send 401, 'Unauthorized'
     else res.send 401, 'Login required'
 
@@ -88,5 +89,5 @@ isAllowed = (objectId, userId, permission, next) ->
     return next null, true if object? and object.access permission + ':' + userId
     return next null, false
 
-publicize = (user) ->
-  user.publicView ? {}
+publicize = (object) ->
+  object.publicView ? {}

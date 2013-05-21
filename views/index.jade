@@ -17,11 +17,4 @@ block content
     div(ng-repeat="message in messages", ng-animate="{enter: 'fade-in', leave: 'fade-out', move: 'slide'}", ng-click="removeMessage(message)", ng-init="delay(removeMessage,message,5000)")
       div.alert(ng-class="'alert-'+message.type", ng-bind="message.message || ''", ng-show="message")
           button(type="button", class="close", ng-click="removeMessage(message)") &times;
-    //div.alert.alert-error(ng-repeat="message in errorMessages", ng-animate="'fade-in'") {{message}}
-    //  button(type="button", class="close", data-dismiss="alert", ng-click="errorMessages.splice(errorMessages.indexOf(message),1)") &times;
-    //div.alert.alert-success(ng-repeat="message in successMessages") {{message}}
-    //  button(type="button", class="close", data-dismiss="alert", ng-click="successMessages.splice(successMessages.indexOf(message),1)") &times;
-    //div.alert.alert-warning(ng-repeat="message in warningMessages") {{message}}
-    //  button(type="button", class="close", data-dismiss="alert", ng-click="warningMessages.splice(warningMessages.indexOf(message),1)") &times;
-    //div.fade-in-container(ng-view ng-animate="'fade-in'")
     div.fade-in-container(ui-view ng-animate="{enter: 'fade-in', leave: 'snap-out'}")

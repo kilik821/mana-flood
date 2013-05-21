@@ -36,11 +36,6 @@ userSchema =
 
 User = new mongoose.Schema userSchema
 
-User.path('hashed_password').validate (hashed_password)->
-  return false unless @_password?
-  @_password.length >= 8
-, 'Password must be 8 or more characters long'
-
 User.virtual('password').set((password) ->
   @_password = password
   @salt = do @makeSalt
@@ -78,6 +73,13 @@ User.virtual('publicView').get ->
   copy = {}
   for field in publicFields
     copy[field] = @[field] if @[field]?
+  copy
+
+User.statics.publicSearch = (params) ->
+  copy = {}
+  for field of params
+    if field in publicFields
+      copy[field] = params[field]
   copy
 
 User.statics.editable = (user) ->

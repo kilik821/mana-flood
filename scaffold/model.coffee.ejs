@@ -24,10 +24,17 @@ ObjectId = Schema.Types.ObjectId
     copy[field] = @[field] if @[field]?
   copy
 
-<%=: name | capitalize %>.statics.editable (<%=: name %>) ->
-  new<%=: name | capitalize %> = {}
+<%=: name | capitalize %>.statics.publicSearch = (params) ->
+  copy = {}
+  for field of params
+    if field in publicFields
+      copy[field] = params[field]
+  copy
+
+<%=: name | capitalize %>.statics.editable = (object) ->
+  copy = {}
   for field in editableFields
-    new<%=: name | capitalize %>[field] = <%=: name %>[field] if <%=: name %>[field]?
-  new<%=: name | capitalize %>
+    copy[field] = object[field] if object[field]?
+  copy
 
 module.exports = mongoose.model '<%=: name | capitalize %>', <%=: name | capitalize %>

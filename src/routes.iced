@@ -14,6 +14,9 @@ module.exports = (app) ->
   app.post '/api/:controller', (req, res, next) ->
     routeMvc(req.params.controller, 'create', req, res, next)
 
+  app.get '/api/:controller/all', (req, res, next) ->
+    routeMvc(req.params.controller, 'index', req, res, next)
+
   app.all '/api/:controller/all/:method', (req, res, next) ->
     routeMvc(req.params.controller, req.params.method, req, res, next)
 
@@ -33,24 +36,7 @@ module.exports = (app) ->
     routeMvc(req.params.controller, req.params.method, req, res, next)
 
   app.all '/api/*', (req, res, next) ->
-    res.status 404
-    res.send 'Route not found'
-
-#  #   - _/_ -> controllers/index/index method
-#  app.all '/api', (req, res, next) ->
-#    routeMvc('index', 'index', req, res, next)
-#
-#  #   - _/**:controller**_  -> controllers/***:controller***/index method
-#  app.all '/api/:controller', (req, res, next) ->
-#    routeMvc(req.params.controller, 'index', req, res, next)
-#
-#  #   - _/**:controller**/**:method**_ -> controllers/***:controller***/***:method*** method
-#  app.all '/api/:controller/:method', (req, res, next) ->
-#    routeMvc(req.params.controller, req.params.method, req, res, next)
-#
-#  #   - _/**:controller**/**:method**/**:id**_ -> controllers/***:controller***/***:method*** method with ***:id*** param passed
-#  app.all '/api/:controller/:method/:id', (req, res, next) ->
-#    routeMvc(req.params.controller, req.params.method, req, res, next)
+    res.send 404, 'Route not found'
 
   # If all else failed, show index page
   app.all '/*', (req, res) ->
@@ -64,11 +50,10 @@ routeMvc = (controllerName, methodName, req, res, next) ->
     controller = require "./controllers/" + controllerName
   catch e
     console.warn "controller not found: " + controllerName, e
-    next()
-    return
+    res.send 404, controllerName + ' not found'
   if typeof controller[methodName] is 'function'
     actionMethod = controller[methodName].bind controller
     actionMethod req, res, next
   else
     console.warn 'method not found: ' + methodName
-    next()
+    res.send 404, "Method '#{methodName}' on resource '#{controllerName}' not found"

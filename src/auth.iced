@@ -36,3 +36,21 @@ module.exports = (app) ->
       do req.user.markLogout
     req.logout()
     res.send 200
+
+  # Allow 'admin' user to do everything
+  User.findOne {username: 'admin'}, (err, user) ->
+    unless err?
+      if user?
+        if 'editUserRoles' not in user.roles
+          user.roles.push 'editUserRoles'
+        User.update {username: 'admin'}, {$set: {roles: user.roles}}, (err) ->
+          unless err?
+            console.log 'Set admin permissions.'
+          else console.log err
+      else console.log 'Admin not found.'
+    else console.log err
+
+unique = (el, i, a) ->
+  if a.indexOf el is i
+    1
+  else 0
