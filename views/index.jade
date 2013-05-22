@@ -2,19 +2,22 @@ extends layout
 block content
   .container(ng-controller="AppCtrl")
     header
-      div.page-header
-        a(href="/")
-          h1 Mana Flood
-      div.navbar(ng-controller="NavCtrl")
-        div.navbar-inner
-          a.brand(href="#") Mana Flood
-          ul.nav
-            li(ng-repeat="link in mainLinks", ng-click="select(link)", ng-class="{active: link == selected}")
-              a(href="{{link.url}}", ng-bind="link.title || ''")
-          ul.nav.pull-right
-            li(ng-repeat="link in userLinks", ng-show="link.whenLogged == userIsLoggedIn", ng-click="select(link)", ng-class="{active: link == selected}")
-              a(href="{{link.url}}", ng-bind="link.title || ''")
+      .navbar.navbar-inverse.navbar-fixed-top(ng-controller="NavCtrl")
+        .navbar-inner
+          .container
+            a.btn.btn-navbar(data-toggle="collapse", data-target=".nav-collapse")
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+            a.brand(href="/") Mana Flood
+            .nav-collapse.collapse
+              ul.nav
+                li(ng-repeat="link in mainLinks", ng-click="select(link)", ng-class="{active: link == selected}")
+                  a(href="{{link.url}}", ng-bind="link.title || ''")
+              ul.nav
+                li(ng-repeat="link in userLinks", ng-show="link.whenLogged == userIsLoggedIn", ng-click="select(link)", ng-class="{active: link == selected}")
+                  a(href="{{link.url}}", ng-bind="link.title || ''")
     div(ng-repeat="message in messages", ng-animate="{enter: 'fade-in', leave: 'fade-out', move: 'slide'}", ng-click="removeMessage(message)", ng-init="delay(removeMessage,message,5000)")
-      div.alert(ng-class="'alert-'+message.type", ng-bind="message.message || ''", ng-show="message")
+      .alert(ng-class="'alert-'+message.type", ng-bind="message.message || ''", ng-show="message")
           button(type="button", class="close", ng-click="removeMessage(message)") &times;
-    div.fade-in-container(ui-view ng-animate="{enter: 'fade-in', leave: 'snap-out'}")
+    .fade-in-container(ui-view ng-animate="{enter: 'fade-in', leave: 'snap-out'}")
