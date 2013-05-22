@@ -1,4 +1,5 @@
 .app/
+.idea/
 .DS_Store
 lib-cov
 *.seed
