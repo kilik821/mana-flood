@@ -2,8 +2,8 @@ module = angular.module 'MtGApps', ['ui.compat','MtGApps.services', 'MtGApps.dir
 module.config ['$routeProvider', '$locationProvider', '$stateProvider', ($routeProvider, $locationProvider, $stateProvider)->
   $locationProvider.html5Mode true
   $stateProvider
-    .state('lists', {templateUrl: 'partials/cardlists', abstract: true})
-    .state('lists.index', {templateUrl: 'partials/cardlists', url: '/decks', controller: 'CardListCtrl'})
+    .state('decks', {templateUrl: 'partials/decks', abstract: true})
+    .state('decks.index', {templateUrl: 'partials/decks/view', url: '/decks', controller: 'DeckViewCtrl'})
     .state('cards', {templateUrl: 'partials/cards', abstract: true})
     .state('cards.view', {templateUrl: 'partials/cards/view', url: '/cards', controller: 'CardCtrl'})
     .state('account', {templateUrl: 'partials/account', abstract: true, controller: 'AccountCtrl'})

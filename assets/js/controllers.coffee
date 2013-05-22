@@ -88,7 +88,7 @@ module.controller 'IndexCtrl', ['$scope', ($scope) ->
 
 ]
 
-module.controller 'CardListCtrl', ['$scope', 'CardList', '$route', ($scope, CardList, $route) ->
+module.controller 'DeckViewCtrl', ['$scope', 'CardList', '$route', ($scope, CardList, $route) ->
 
 ]
 
