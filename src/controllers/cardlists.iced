@@ -29,11 +29,12 @@ module.exports =
   # Gets cardlist by id
   get: (req, res) ->
     Cardlist.findById req.params.id, req.searchFields, (err, cardlist) ->
-      unless err?
-        if cardlist.public or cardlist.access 'view:' + req.user?._id
-          res.send publicize(cardlist)
-        else res.send 404
-      else res.send 500, err
+      Cardlist.populate cardlist, req.populate, (err, cardlist) ->
+        unless err?
+          if cardlist? and (cardlist.public or cardlist.access 'view:' + req.user?._id)
+            res.send publicize(cardlist)
+          else res.send 404
+        else res.send 500, err
 
   # Gets most recent decks
   recentDecks: (req, res) ->
@@ -42,10 +43,11 @@ module.exports =
     whereOptions.type = 'deck'
     req.searchOptions.sort = {created: -1} if req.searchOptions?
     Cardlist.find Cardlist.publicSearch(req.whereParams), req.searchFields, req.searchOptions, (err, cardlists) ->
-      unless err?
-        res.send 200, cardlists.map(publicize)
-      else
-        res.send 500, err
+      Cardlist.populate cardlists, req.populate, (err, cardlists) ->
+        unless err?
+          res.send 200, cardlists.map(publicize)
+        else
+          res.send 500, err
 
   # Updates cardlist with data from `req.body`
   update: (req, res) ->

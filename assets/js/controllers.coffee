@@ -101,13 +101,23 @@ module.controller 'DeckIndexCtrl', ['$scope', 'CardList', ($scope, CardList) ->
 ]
 
 module.controller 'DeckEditCtrl', ['$scope', 'CardList', '$stateParams', 'Card', ($scope, CardList, $stateParams, Card) ->
-  $scope.deck = if $stateParams.deckId then CardList.get({cardlistId: $stateParams.deckId}) else new CardList()
+  if $stateParams.deckId
+    CardList.get {cardlistId: $stateParams.deckId, populate: {path: 'cards.card'}}, (response) ->
+      $scope.deck = new CardList response
+      $scope.viewedCard = $scope.deck.cards[0]
+      $scope.deck.type ?= 'deck'
+  else
+    $scope.deck = new CardList()
+    $scope.deck.type ?= 'deck'
 
   $scope.submit = ->
-    $scope.deck.$save (response) ->
+    $scope.savedDeck = angular.copy $scope.deck
+    for card, i in $scope.savedDeck.cards
+       $scope.savedDeck.cards[i].card = card.card._id if card.card._id?
+    $scope.savedDeck.$save (response) ->
       $scope.$emit 'message', 'success', 'Your deck has been saved!'
-      console.log response
-      $scope.deck = new CardList(response)
+      CardList.get {cardlistId: response._id, populate: {path:'cards.card'}}, (response) ->
+        $scope.deck = new CardList(response)
     , (response) ->
       $scope.$emit 'message', 'error', "Something went wrong: #{message ? response.data.err ? response.data}"
 
@@ -117,12 +127,19 @@ module.controller 'DeckEditCtrl', ['$scope', 'CardList', '$stateParams', 'Card',
   $scope.removeCard = (card) ->
     $scope.deck.cards.splice($scope.deck.cards.indexOf(card), 1)
 
+  $scope.decrementCardCount = (card) ->
+    if --card.quantity is 0
+      $scope.removeCard card
+
+  $scope.incrementCardCount = (card) ->
+    card.quantity++
+
   $scope.addCardByName = (cardName) ->
     Card.query {where: {name: "^#{cardName}$"}, fields: 'name _id'}, (response) ->
-      console.log response[response.length-1]
-      $scope.deck.cards.push response[response.length-1]
+      $scope.deck.cards.push {card: {name: cardName, _id: response[response.length-1]._id}, quantity: 1}
+      $scope.newCard = ''
 
-  $scope.findCardByName = (cardName, callback) ->
+  $scope.findCardByName = (cardName) ->
     Card.query {where: {name: cardName}, fields: 'name _id'}, (response) ->
       cards = []
       for card in response
