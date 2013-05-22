@@ -2,7 +2,7 @@ extends layout
 block content
   .container(ng-controller="AppCtrl")
     header
-      .navbar.navbar-inverse.navbar-fixed-top(ng-controller="NavCtrl")
+      .navbar.navbar-inverse.navbar-fixed-top(ng-controller="NavCtrl", bs-navbar)
         .navbar-inner
           .container
             a.btn.btn-navbar(data-toggle="collapse", data-target=".nav-collapse")
@@ -12,16 +12,12 @@ block content
             a.brand(href="/") Mana Flood
             .nav-collapse.collapse
               ul.nav
-                li.dropdown(ng-repeat="link in mainLinks", ng-class="{active: link.selected}", data-toggle="collapse", data-target=".nav-collapse")
-                  a(href="{{link.url}}", ng-bind="link.title || ''", ng-hide="link.subMenu")
-                  a.dropdown-toggle(href="#", ng-bind="link.title || ''", ng-show="link.subMenu", data-toggle="dropdown")
-                  ul.dropdown-menu(ng-show="link.subMenu")
-                    li(ng-repeat="link in link.subMenu", ng-class="{active: link.selected}")
-                      a(href="{{link.url}}") {{link.title}}
+                li(ng-repeat="link in mainLinks", data-match-route="{{link.regex}}")
+                  a(ng-bind="link.text || ''", bs-dropdown="link.subMenu")
               ul.nav.pull-right
-                li(ng-repeat="link in userLinks", ng-show="link.whenLogged == userIsLoggedIn", ng-click="select(link)", ng-class="{active: link.selected}", data-toggle="collapse", data-target=".nav-collapse")
-                  a(href="{{link.url}}", ng-bind="link.title || ''")
-    div(ng-repeat="message in messages", ng-animate="{enter: 'fade-in', leave: 'fade-out', move: 'slide'}", ng-click="removeMessage(message)", ng-init="delay(removeMessage,message,5000)")
+                li(ng-repeat="link in userLinks", ng-show="link.whenLogged == userIsLoggedIn", data-match-route="{{link.regex}}")
+                  a(href="{{link.href}}", ng-bind="link.text || ''")
+    div(ng-repeat="message in messages", ng-animate="{enter: 'fade-in', leave: 'fade-out', move: 'slide'}", ng-click="removeMessage(message)", ng-init="delay(removeMessage,message,5000)", class="ng-cloak")
       .alert(ng-class="'alert-'+message.type", ng-bind="message.message || ''", ng-show="message")
           button(type="button", class="close", ng-click="removeMessage(message)") &times;
     .row(ui-view ng-animate="{enter: 'fade-in', leave: 'snap-out'}")

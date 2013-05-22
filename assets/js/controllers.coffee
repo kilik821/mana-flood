@@ -42,38 +42,19 @@ module.controller 'AppCtrl', ['$scope', 'User', '$timeout', '$state', ($scope, U
 
 module.controller 'NavCtrl', ['$rootScope', '$scope', '$location', ($rootScope, $scope, $location) ->
   $scope.mainLinks = [
-    {title: 'Decks', subMenu: [
-      {url: '/decks', state: 'decks.index', title: 'Recent'}
-      {url: '/decks/edit/', state: 'decks.edit', title: 'New'}
-      {url: '/decks/mine', state: 'decks.mine', title: 'Mine'}
+    {text: 'Decks', href: '/decks', regex: '/decks.*', subMenu: [
+      {href: '/decks', state: 'decks.index', text: 'Recent'}
+      {href: '/decks/edit/', state: 'decks.edit', text: 'New'}
+      {href: '/decks/mine', state: 'decks.mine', text: 'Mine'}
     ]}
   ]
   $scope.userLinks = [
-    {url: '/register', state: 'account.register', title: 'Register', whenLogged: false}
-    {url: '/login', state: 'account.login', title: 'Login', whenLogged: false}
-    {url: '/account', state: 'account.viewAccount', title: 'Account', whenLogged: true}
-    {url: '/logout', title: 'Logout', whenLogged: true}
+    {href: '/register', regex: '/register.*', state: 'account.register', text: 'Register', whenLogged: false}
+    {href: '/login', regex: '/login.*', state: 'account.login', text: 'Login', whenLogged: false}
+    {href: '/account', regex: '/account.*', state: 'account.viewAccount', text: 'Account', whenLogged: true}
+    {href: '/logout', regex: '/logout.*', text: 'Logout', whenLogged: true}
   ]
-  links = $scope.mainLinks.concat($scope.userLinks)
 
-  setSelected = (url) ->
-    setSelectedRecur url, links
-
-  setSelectedRecur = (url, links) ->
-    return unless links?
-    selected = null
-    for link in links
-      link.selected = false
-      if link.url? and url.indexOf(link.url) >= 0
-        selected = link
-      result = setSelectedRecur url, link.subMenu
-      if result? then link.selected = true
-      selected = result ? selected
-    if selected? then selected.selected = true
-    return selected
-
-  $rootScope.$on '$stateChangeSuccess', (event, current, previous) ->
-    setSelected $location.path()
 ]
 
 module.controller 'UserLoginCtrl', ['$scope', 'User', '$window', ($scope, User, $window)->
@@ -101,6 +82,9 @@ module.controller 'DeckIndexCtrl', ['$scope', 'CardList', ($scope, CardList) ->
 ]
 
 module.controller 'DeckEditCtrl', ['$scope', 'CardList', '$stateParams', 'Card', ($scope, CardList, $stateParams, Card) ->
+  $scope.cardTypes = ['Creature', 'Land', 'Artifact', 'Enchantment', 'Instant', 'Sorcery']
+  clickedCard = false
+
   if $stateParams.deckId
     CardList.get {cardlistId: $stateParams.deckId, populate: {path: 'cards.card'}}, (response) ->
       $scope.deck = new CardList response
@@ -124,6 +108,14 @@ module.controller 'DeckEditCtrl', ['$scope', 'CardList', '$stateParams', 'Card',
   $scope.info = ->
     console.log $scope.deck
 
+  $scope.setViewedCardClick = (card) ->
+    $scope.viewedCard = card
+    clickedCard = true
+
+  $scope.setViewedCardMouseOver = (card) ->
+    unless clickedCard
+      $scope.viewedCard = card
+
   $scope.removeCard = (card) ->
     $scope.deck.cards.splice($scope.deck.cards.indexOf(card), 1)
 
@@ -136,8 +128,10 @@ module.controller 'DeckEditCtrl', ['$scope', 'CardList', '$stateParams', 'Card',
 
   $scope.addCardByName = (cardName) ->
     Card.query {where: {name: "^#{cardName}$"}, fields: 'name _id'}, (response) ->
-      $scope.deck.cards.push {card: {name: cardName, _id: response[response.length-1]._id}, quantity: 1}
-      $scope.newCard = ''
+      if response.length
+        $scope.deck.cards.push {card: {name: cardName, _id: response[response.length-1]._id}, quantity: 1}
+        $scope.newCard = ''
+        $scope.$apply()
 
   $scope.findCardByName = (cardName) ->
     Card.query {where: {name: cardName}, fields: 'name _id'}, (response) ->
@@ -145,6 +139,16 @@ module.controller 'DeckEditCtrl', ['$scope', 'CardList', '$stateParams', 'Card',
       for card in response
         cards.push "#{card.name}" unless card.name in cards
       $scope.possibleCards = cards
+
+  $scope.filterType = (type) ->
+    console.log type
+    console.log arguments
+    return (elem) ->
+      console.log elem
+      console.log type
+      if elem.card?.types? and type in elem.card.types
+        return true
+      return false
 ]
 
 

@@ -11,16 +11,18 @@ h2 Edit Deck
       label.control-label(for="publicField") Public
       .controls
         input(type="checkbox", ng-model="deck.public")
-    div.control-group(ng-repeat="card in deck.cards")
-      .controls
-        .btn-group(bs-tooltip)
-          button.btn.btn-mini(ng-click="decrementCardCount(card)")
-            i.icon-minus
-          button.btn.btn-mini(ng-click="incrementCardCount(card)")
-            i.icon-plus
-        span {{card.quantity}}x {{card.card.name}}
-        button.btn.btn-danger.btn-mini(ng-click="removeCard(card)")
-          i.icon-remove
+    .row
+      .span2(ng-repeat="cardType in cardTypes", ng-show="(deck.cards|isType:cardType)")
+        h3 {{cardType}}
+        div(ng-repeat="card in deck.cards | isType:cardType")
+          p(ng-mouseover="setViewedCardMouseOver(card)", ng-click="setViewedCardClick(card)") {{card.quantity}}x {{card.card.name}}
+            .btn-group(bs-tooltip)
+              button.btn.btn-mini(ng-click="decrementCardCount(card)")
+                i.icon-minus
+              button.btn.btn-mini(ng-click="incrementCardCount(card)")
+                i.icon-plus
+              button.btn.btn-danger.btn-mini(ng-click="removeCard(card)")
+                i.icon-remove
     .control-group
       label.control-label(for="addCardField") Add Card
       .controls
@@ -34,5 +36,5 @@ h2 Edit Deck
     .control-group
       .controls
         button.btn(ng-click="info()") Info
-  .span4
-    img.img-rounded(src="{{viewedCard.card.imageUrl}}")
+  .span3.offset1
+    img.img-magiccard(src="{{viewedCard.card.imageUrl}}", ng-show="viewedCard")
