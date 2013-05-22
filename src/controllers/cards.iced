@@ -7,6 +7,8 @@ module.exports =
   index: (req, res) ->
     req.whereParams.public = true
     where = Card.publicSearch req.whereParams
+    if where.name?
+      where.name = new RegExp(where.name)
     Card.find where, req.searchFields, req.searchOptions, (err, cards) ->
       res.send cards.map(publicize)
 

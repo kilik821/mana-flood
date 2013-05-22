@@ -86,13 +86,18 @@ exports.scheduleCardListUpdate = (interval, cb) ->
     cardListUpdate cb
   , interval
 
-exports.manualCardListUpdate = (sets, cb) ->
+exports.manualCardListUpdate = manualCardListUpdate = (sets, cb) ->
   unless updating
     cardListUpdate sets, (err, result) ->
       updating = false
       return cb err, result
   else
     cb new Error 'Maintenance in progress.'
+
+exports.manualStartAtCardListUpdate = (starting, cb) ->
+  await require('tutor').sets defer err, sets
+  sets = sets.slice sets.indexOf(starting), -1
+  manualCardListUpdate sets, cb
 
 exports.manualAllCardListUpdate = (cb) ->
   await require('tutor').sets defer err, sets

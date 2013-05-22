@@ -19,16 +19,21 @@ head
 body(ng-app="MtGApps")
   block content
 
-  //!= js('//code.angularjs.org/1.1.4/angular.js')
-  != js('lib/angular.min.js')
-  != js('lib/angular-resource.min.js')
   != js('lib/jquery.min.js')
 
-  //!= js('bootstrap.min')
   //!= js('lib/bootstrap.min')
   != js('lib/bootstrap.min.js')
-  != js('lib/angular-ui-states.min')
+
+  //!= js('//code.angularjs.org/1.1.4/angular.js')
+  != js('lib/angular.min.js')
+
+  != js('lib/angular-resource.min.js')
+
   //!= js('lib/angular-ui-states')
+  != js('lib/angular-ui-states.min')
+
+  //!= js('lib/angular-strap.min.js')
+  != js('lib/angular-strap.js')
 
   != js('directives')
   != js('filters')

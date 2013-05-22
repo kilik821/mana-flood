@@ -62,7 +62,7 @@ Card = new Schema
 
 Card.statics.publicFields = publicFields = ['name','convertedManaCost','superTypes','types','subTypes','expansion',
                                             'gathererUrl','imageUrl','manaCost','power','toughness','text','versions',
-                                            'rarity','official','author']
+                                            'rarity','official','author', '_id']
 Card.statics.adminFields = adminFields = []
 
 Card.statics.editableFields = editableFields = ['name','convertedManaCost','superTypes','types','subTypes','imageUrl',
@@ -92,5 +92,10 @@ Card.statics.editable = (card) ->
   for field in editableFields
     newCard[field] = card[field] if card[field]?
   newCard
+
+Card.plugin troop.acl
+
+Card.methods.toJSON = ->
+  @publicView
 
 module.exports = mongoose.model 'Card', Card

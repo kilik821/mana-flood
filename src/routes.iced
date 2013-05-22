@@ -48,12 +48,12 @@ routeMvc = (controllerName, methodName, req, res, next) ->
   controller = null
   try
     controller = require "./controllers/" + controllerName
-    if typeof controller[methodName] is 'function'
-      actionMethod = controller[methodName].bind controller
-      actionMethod req, res, next
-    else
-      console.warn 'method not found: ' + methodName
-      res.send 404, "Method '#{methodName}' on resource '#{controllerName}' not found"
   catch e
     console.warn "controller not found: " + controllerName, e
     res.send 404, controllerName + ' not found'
+  if typeof controller[methodName] is 'function'
+    actionMethod = controller[methodName].bind controller
+    actionMethod req, res, next
+  else
+    console.warn 'method not found: ' + methodName
+    res.send 404, "Method '#{methodName}' on resource '#{controllerName}' not found"

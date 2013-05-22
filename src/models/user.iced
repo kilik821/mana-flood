@@ -2,6 +2,8 @@ mongoose = require 'mongoose'
 crypto = require 'crypto'
 troop = require 'mongoose-troop'
 
+publicFields = ['username', 'online', '_id']
+
 # User model
 userSchema =
   email:
@@ -18,10 +20,8 @@ userSchema =
     required: true
   hashed_password:
     type: String
-    select: true
   salt:
     type: String
-    select: true
   dateCreated:
     type: Date
     "default": Date.now
@@ -59,7 +59,7 @@ User.method 'markLogin', () ->
 User.method 'markLogout', () ->
   @online = false
 
-User.statics.publicFields = publicFields = ['username', 'online', '_id']
+User.statics.publicFields = publicFields
 User.statics.adminFields = adminFields = ['email']
 User.statics.updateableFields = editableFields = ['username', 'email', 'password']
 
@@ -89,5 +89,8 @@ User.statics.editable = (user) ->
   newUser
 
 User.plugin troop.acl
+
+User.methods.toJSON = ->
+  @publicView
 
 module.exports = mongoose.model 'User', User

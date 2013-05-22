@@ -1,0 +1,35 @@
+!!! 5
+
+h2 Edit Deck
+form.form-horizontal(ng-submit="submit()")
+  .control-group
+    label.control-label(for="titleField") Title
+    .controls
+      input(type="text", placeholder="Title", ng-model="deck.title", id="titleField")
+  .control-group
+    label.control-label(for="publicField") Public
+    .controls
+      input(type="checkbox", ng-model="deck.public")
+  div.control-group(ng-repeat="card in deck.cards")
+    .controls
+      .btn-group
+        button.btn(ng-click="decrementCardCount(card)")
+          i.icon-minus
+        button.btn(ng-click="incrementCardCount(card)")
+          i.icon-plus
+      span {{card.name}}
+      button.btn.btn-danger(ng-click="removeCard(card)")
+        i.icon-remove
+  .control-group
+    label.control-label(for="addCardField") Add Card
+    .controls
+      .input-append
+        input(type="text", ng-model="newCard", bs-typeahead="possibleCards", ng-change="findCardByName(newCard)")
+        button.btn(ng-click="addCardByName(newCard)")
+          i.icon-plus
+  .control-group
+    .controls
+      input.btn.btn-primary(type="submit", value="Save")
+.control-group
+  .controls
+    button.btn(ng-click="info()") Info

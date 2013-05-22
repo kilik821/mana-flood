@@ -23,7 +23,9 @@ module.exports =
   get: (req, res) ->
     User.findById req.params.id, req.searchFields, (err, user) ->
       unless err?
-        res.send publicize(user)
+        if user?
+          res.send publicize(user)
+        else res.send 404
       else res.send 500, err
 
   # Updates user with data from `req.body`
@@ -90,4 +92,4 @@ isAllowed = (objectId, userId, permission, next) ->
     return next null, false
 
 publicize = (object) ->
-  object.publicView ? {}
+  if object? then object.publicView ? {} else null

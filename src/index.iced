@@ -4,6 +4,7 @@ assets = require 'connect-assets'
 mongoose = require 'mongoose'
 mongoStore = require('connect-mongo')(express)
 updates = require './update'
+models = require './models'
 
 #### Basic application initialization
 # Create app instance.
@@ -58,8 +59,9 @@ optionsParser = (req, res, next) ->
         sort = {}
         sort[field] = -1
     options.sort = sort
+  req.populate = if req.query.populate? then JSON.parse req.query.populate else []
   req.searchFields = req.query.fields ? req.body.fields if req.query.fields? or req.body.fields?
-  req.whereParams = req.body.where ? {}
+  req.whereParams = if req.query.where then JSON.parse req.query.where else {}
   req.searchOptions = options
   do next
 app.use optionsParser

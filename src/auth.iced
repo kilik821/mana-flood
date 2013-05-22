@@ -5,7 +5,7 @@ LocalStrategy = require('passport-local').Strategy
 
 module.exports = (app) ->
   passport.use new LocalStrategy (username, password, done) ->
-    User.findOne {username: username}, (err, user) ->
+    User.findOne {username: username}, 'roles', (err, user) ->
       return done err if err?
       return done null, false, {message: 'Unrecognized username/password combination'} unless user and user.authenticate password
       return done null, user
@@ -38,7 +38,7 @@ module.exports = (app) ->
     res.send 200
 
   # Allow 'admin' user to do everything
-  User.findOne {username: 'admin'}, (err, user) ->
+  User.findOne {username: 'admin'}, 'roles', (err, user) ->
     unless err?
       if user?
         if 'editUserRoles' not in user.roles

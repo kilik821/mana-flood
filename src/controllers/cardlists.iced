@@ -8,7 +8,8 @@ module.exports =
     req.whereParams.public = true
     where = Cardlist.publicSearch req.whereParams
     Cardlist.find where, req.searchFields, req.searchOptions, (err, cardlists) ->
-      res.send cardlists.map(publicize)
+      Cardlist.populate cardlists, req.populate, (err, cardlists) ->
+        res.send cardlists.map(publicize)
       
   # Creates new cardlist with data from `req.body`
   create: (req, res) ->
@@ -33,6 +34,18 @@ module.exports =
           res.send publicize(cardlist)
         else res.send 404
       else res.send 500, err
+
+  # Gets most recent decks
+  recentDecks: (req, res) ->
+    whereOptions = if req.whereParams? then Cardlist.publicSearch(req.whereParams) else {}
+    whereOptions.public = true
+    whereOptions.type = 'deck'
+    req.searchOptions.sort = {created: -1} if req.searchOptions?
+    Cardlist.find Cardlist.publicSearch(req.whereParams), req.searchFields, req.searchOptions, (err, cardlists) ->
+      unless err?
+        res.send 200, cardlists.map(publicize)
+      else
+        res.send 500, err
 
   # Updates cardlist with data from `req.body`
   update: (req, res) ->

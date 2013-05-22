@@ -1,4 +1,5 @@
 mongoose = require 'mongoose'
+troop = require 'mongoose-troop'
 
 Schema = mongoose.Schema
 ObjectId = Schema.Types.ObjectId
@@ -25,6 +26,9 @@ Cardlist = new Schema
       quantity: Number
     ]
     "default": []
+  created:
+    type: Date
+    "default": Date.now
   "public":
     type: Boolean
     "default": true
@@ -37,7 +41,7 @@ Cardlist = new Schema
     "default": false
 
 
-Cardlist.statics.publicFields = publicFields = ['title', 'author', 'cards', 'public', 'type', 'official']
+Cardlist.statics.publicFields = publicFields = ['title', 'author', 'cards', 'public', 'type', 'official', '_id']
 Cardlist.statics.adminFields = adminFields = []
 Cardlist.statics.editableFields = editableFields = ['title', 'cards', 'public', 'type']
 
@@ -65,5 +69,10 @@ Cardlist.statics.editable = (cardlist) ->
   for field in editableFields
     newCardlist[field] = cardlist[field] if cardlist[field]?
   newCardlist
+
+Cardlist.plugin troop.acl
+
+Cardlist.methods.toJSON = ->
+  @publicView
 
 module.exports = mongoose.model 'Cardlist', Cardlist
