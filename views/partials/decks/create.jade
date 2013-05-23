@@ -12,12 +12,22 @@ h2 Edit Deck
         label.control-label(for="publicField") Public
         .controls
           input(type="checkbox", ng-model="deck.public")
+      .control-group
+        .controls
+          button.btn.btn-primary(ng-click="submit()") Save
+      .control-group
+        .controls
+          button.btn(ng-click="info()") Info
+    .well
       .row-fluid
-        .span3(ng-repeat="cardType in cardTypes", ng-show="(deck.cards|isType:cardType)")
+        .span3(ng-repeat="cardType in cardTypes", ng-show="(filteredCards = (deck.cards|isType:cardType)).length")
+
           h3 {{cardType}}
-          div(ng-repeat="card in deck.cards | isType:cardType")
-            p(ng-mouseover="setViewedCardMouseOver(card)", ng-click="setViewedCardClick(card)") {{card.quantity}}x {{card.card.name}}
-              .btn-group(bs-tooltip)
+          div(ng-repeat="card in filteredCards")
+            a(ng-mouseover="setViewedCardMouseOver(card)", ng-click="setViewedCardClick(card)", data-toggle="collapse", data-target="#card-{{card._id}}-{{cardType}}") {{card.quantity}}x {{card.card.name}}
+            br
+            .collapse(id="card-{{card._id}}-{{cardType}}")
+              p.btn-group
                 button.btn.btn-mini(ng-click="decrementCardCount(card)")
                   i.icon-minus
                 button.btn.btn-mini(ng-click="incrementCardCount(card)")
@@ -31,12 +41,6 @@ h2 Edit Deck
             input(type="text", ng-model="newCard", bs-typeahead="possibleCards", ng-change="findCardByName(newCard)")
             button.btn(ng-click="addCardByName(newCard)")
               i.icon-plus
-      .control-group
-        .controls
-          button.btn.btn-primary(ng-click="submit()") Save
-      .control-group
-        .controls
-          button.btn(ng-click="info()") Info
   .span4
     .well
       img.img-magiccard(src="{{viewedCard.card.imageUrl}}", ng-show="viewedCard")

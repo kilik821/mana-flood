@@ -127,11 +127,11 @@ module.controller 'DeckEditCtrl', ['$scope', 'CardList', '$stateParams', 'Card',
     card.quantity++
 
   $scope.addCardByName = (cardName) ->
-    Card.query {where: {name: "^#{cardName}$"}, fields: 'name _id'}, (response) ->
+    Card.query {where: {name: "^#{cardName}$"}}, (response) ->
       if response.length
-        $scope.deck.cards.push {card: {name: cardName, _id: response[response.length-1]._id}, quantity: 1}
+        console.log response
+        $scope.deck.cards.push {card: response[response.length-1], quantity: 1}
         $scope.newCard = ''
-        $scope.$apply()
 
   $scope.findCardByName = (cardName) ->
     Card.query {where: {name: cardName}, fields: 'name _id'}, (response) ->
