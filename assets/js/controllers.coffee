@@ -102,7 +102,7 @@ module.controller 'DeckEditCtrl', ['$scope', 'CardList', '$stateParams', 'Card',
       CardList.get {cardlistId: response._id, populate: {path:'cards.card'}}, (response) ->
         $scope.deck = new CardList(response)
     , (response) ->
-      $scope.$emit 'message', 'error', "Something went wrong: #{message ? response.data.err ? response.data}"
+      $scope.$emit 'message', 'error', "Something went wrong: #{message ? response.data.message ? response.data.err ? response.data}"
 
   $scope.info = ->
     console.log $scope.deck
@@ -124,6 +124,8 @@ module.controller 'DeckEditCtrl', ['$scope', 'CardList', '$stateParams', 'Card',
     Card.query {where: {name: "^#{cardName}$"}}, (response) ->
       if response.length
         $scope.newCard = ''
+        unless $scope.deck.cards?
+          $scope.deck.cards = []
         $scope.deck.cards.push {card: response[response.length-1], quantity: 1}
       else
         $scope.$emit 'message','error',"Card '#{cardName}' not found"

@@ -40,6 +40,6 @@ h2 Edit Deck
                   button.btn.btn-danger.btn-mini(ng-click="removeCard(card)")
                     i.icon-remove
   .span4
-    .well
+    .well(ng-show="viewedCard")
       a(href="{{viewedCard.card.gathererUrl}}")
         img.img-magiccard(src="{{viewedCard.card.imageUrl}}", ng-show="viewedCard")
