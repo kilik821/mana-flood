@@ -3,38 +3,40 @@
 h2 Edit Deck
 .row
   form.form-horizontal.span8
-    .control-group
-      label.control-label(for="titleField") Title
-      .controls
-        input(type="text", placeholder="Title", ng-model="deck.title", id="titleField")
-    .control-group
-      label.control-label(for="publicField") Public
-      .controls
-        input(type="checkbox", ng-model="deck.public")
-    .row
-      .span2(ng-repeat="cardType in cardTypes", ng-show="(deck.cards|isType:cardType)")
-        h3 {{cardType}}
-        div(ng-repeat="card in deck.cards | isType:cardType")
-          p(ng-mouseover="setViewedCardMouseOver(card)", ng-click="setViewedCardClick(card)") {{card.quantity}}x {{card.card.name}}
-            .btn-group(bs-tooltip)
-              button.btn.btn-mini(ng-click="decrementCardCount(card)")
-                i.icon-minus
-              button.btn.btn-mini(ng-click="incrementCardCount(card)")
-                i.icon-plus
-              button.btn.btn-danger.btn-mini(ng-click="removeCard(card)")
-                i.icon-remove
-    .control-group
-      label.control-label(for="addCardField") Add Card
-      .controls
-        .input-append
-          input(type="text", ng-model="newCard", bs-typeahead="possibleCards", ng-change="findCardByName(newCard)")
-          button.btn(ng-click="addCardByName(newCard)")
-            i.icon-plus
-    .control-group
-      .controls
-        button.btn.btn-primary(ng-click="submit()") Save
-    .control-group
-      .controls
-        button.btn(ng-click="info()") Info
-  .span3.offset1
-    img.img-magiccard(src="{{viewedCard.card.imageUrl}}", ng-show="viewedCard")
+    .well
+      .control-group
+        label.control-label(for="titleField") Title
+        .controls
+          input(type="text", placeholder="Title", ng-model="deck.title", id="titleField")
+      .control-group
+        label.control-label(for="publicField") Public
+        .controls
+          input(type="checkbox", ng-model="deck.public")
+      .row-fluid
+        .span3(ng-repeat="cardType in cardTypes", ng-show="(deck.cards|isType:cardType)")
+          h3 {{cardType}}
+          div(ng-repeat="card in deck.cards | isType:cardType")
+            p(ng-mouseover="setViewedCardMouseOver(card)", ng-click="setViewedCardClick(card)") {{card.quantity}}x {{card.card.name}}
+              .btn-group(bs-tooltip)
+                button.btn.btn-mini(ng-click="decrementCardCount(card)")
+                  i.icon-minus
+                button.btn.btn-mini(ng-click="incrementCardCount(card)")
+                  i.icon-plus
+                button.btn.btn-danger.btn-mini(ng-click="removeCard(card)")
+                  i.icon-remove
+      .control-group
+        label.control-label(for="addCardField") Add Card
+        .controls
+          .input-append
+            input(type="text", ng-model="newCard", bs-typeahead="possibleCards", ng-change="findCardByName(newCard)")
+            button.btn(ng-click="addCardByName(newCard)")
+              i.icon-plus
+      .control-group
+        .controls
+          button.btn.btn-primary(ng-click="submit()") Save
+      .control-group
+        .controls
+          button.btn(ng-click="info()") Info
+  .span4
+    .well
+      img.img-magiccard(src="{{viewedCard.card.imageUrl}}", ng-show="viewedCard")

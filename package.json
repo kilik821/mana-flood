@@ -1,6 +1,6 @@
 {
     "name": "ManaFlood",
-    "version": "0.0.1-29",
+    "version": "0.0.1-31",
     "subdomain": "mana-flood",
     "domains": [
         "manaflood.com",
@@ -45,7 +45,7 @@
         "ejs": "*"
     },
     "engines": {
-        "node": "0.10.x",
+	"node": "0.8.x",
         "npm": "1.2.x"
     }
 }
