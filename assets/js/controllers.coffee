@@ -83,7 +83,6 @@ module.controller 'DeckIndexCtrl', ['$scope', 'CardList', ($scope, CardList) ->
 
 module.controller 'DeckEditCtrl', ['$scope', 'CardList', '$stateParams', 'Card', ($scope, CardList, $stateParams, Card) ->
   $scope.cardTypes = ['Creature', 'Land', 'Artifact', 'Enchantment', 'Instant', 'Sorcery']
-  clickedCard = false
 
   if $stateParams.deckId
     CardList.get {cardlistId: $stateParams.deckId, populate: {path: 'cards.card'}}, (response) ->
@@ -108,13 +107,8 @@ module.controller 'DeckEditCtrl', ['$scope', 'CardList', '$stateParams', 'Card',
   $scope.info = ->
     console.log $scope.deck
 
-  $scope.setViewedCardClick = (card) ->
+  $scope.setViewedCard = (card) ->
     $scope.viewedCard = card
-    clickedCard = true
-
-  $scope.setViewedCardMouseOver = (card) ->
-    unless clickedCard
-      $scope.viewedCard = card
 
   $scope.removeCard = (card) ->
     $scope.deck.cards.splice($scope.deck.cards.indexOf(card), 1)
@@ -129,9 +123,10 @@ module.controller 'DeckEditCtrl', ['$scope', 'CardList', '$stateParams', 'Card',
   $scope.addCardByName = (cardName) ->
     Card.query {where: {name: "^#{cardName}$"}}, (response) ->
       if response.length
-        console.log response
-        $scope.deck.cards.push {card: response[response.length-1], quantity: 1}
         $scope.newCard = ''
+        $scope.deck.cards.push {card: response[response.length-1], quantity: 1}
+      else
+        $scope.$emit 'message','error',"Card '#{cardName}' not found"
 
   $scope.findCardByName = (cardName) ->
     Card.query {where: {name: cardName}, fields: 'name _id'}, (response) ->

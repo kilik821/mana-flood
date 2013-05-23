@@ -2,14 +2,14 @@
 
 h2 Edit Deck
 .row
-  form.form-horizontal.span8
-    .well
+  .span8
+    form.form-horizontal.well
       .control-group
-        label.control-label(for="titleField") Title
+        label.control-label.text-left(for="titleField") Title
         .controls
           input(type="text", placeholder="Title", ng-model="deck.title", id="titleField")
       .control-group
-        label.control-label(for="publicField") Public
+        label.control-label.text-left(for="publicField") Public
         .controls
           input(type="checkbox", ng-model="deck.public")
       .control-group
@@ -19,28 +19,27 @@ h2 Edit Deck
         .controls
           button.btn(ng-click="info()") Info
     .well
+      form(ng-submit="addCardByName(newCard)")
+        label(for="addCardField") Add Card
+        .input-append
+          input(type="text", ng-model="newCard", bs-typeahead="possibleCards", ng-change="findCardByName(newCard)", id="addCardField", placeholder="Card Name")
+          button.btn(type="button", ng-click="addCardByName(newCard)")
+            i.icon-plus
       .row-fluid
-        .span3(ng-repeat="cardType in cardTypes", ng-show="(filteredCards = (deck.cards|isType:cardType)).length")
-
-          h3 {{cardType}}
-          div(ng-repeat="card in filteredCards")
-            a(ng-mouseover="setViewedCardMouseOver(card)", ng-click="setViewedCardClick(card)", data-toggle="collapse", data-target="#card-{{card._id}}-{{cardType}}") {{card.quantity}}x {{card.card.name}}
-            br
-            .collapse(id="card-{{card._id}}-{{cardType}}")
-              p.btn-group
-                button.btn.btn-mini(ng-click="decrementCardCount(card)")
-                  i.icon-minus
-                button.btn.btn-mini(ng-click="incrementCardCount(card)")
-                  i.icon-plus
-                button.btn.btn-danger.btn-mini(ng-click="removeCard(card)")
-                  i.icon-remove
-      .control-group
-        label.control-label(for="addCardField") Add Card
-        .controls
-          .input-append
-            input(type="text", ng-model="newCard", bs-typeahead="possibleCards", ng-change="findCardByName(newCard)")
-            button.btn(ng-click="addCardByName(newCard)")
-              i.icon-plus
+        .span9
+          .span4(ng-repeat="cardType in cardTypes", ng-show="(filteredCards = (deck.cards|isType:cardType)).length")
+            h3 {{cardType}}
+            div(ng-repeat="card in filteredCards|orderBy:'card.name'")
+              p(ng-mouseover="setViewedCard(card)", data-toggle="collapse", data-target="#card-{{card._id}}-{{cardType}}") {{card.quantity}} {{card.card.name}}
+              .collapse(id="card-{{card._id}}-{{cardType}}")
+                p.btn-group
+                  button.btn.btn-mini(ng-click="decrementCardCount(card)")
+                    i.icon-minus
+                  button.btn.btn-mini(ng-click="incrementCardCount(card)")
+                    i.icon-plus
+                  button.btn.btn-danger.btn-mini(ng-click="removeCard(card)")
+                    i.icon-remove
   .span4
     .well
-      img.img-magiccard(src="{{viewedCard.card.imageUrl}}", ng-show="viewedCard")
+      a(href="{{viewedCard.card.gathererUrl}}")
+        img.img-magiccard(src="{{viewedCard.card.imageUrl}}", ng-show="viewedCard")
