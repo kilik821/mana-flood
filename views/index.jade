@@ -13,7 +13,8 @@ block content
             .nav-collapse.collapse
               ul.nav
                 li(ng-repeat="link in mainLinks", data-match-route="{{link.regex}}")
-                  a(ng-bind="link.text || ''", bs-dropdown="link.subMenu")
+                  a(ng-bind="link.text || ''", bs-dropdown="link.subMenu", href, ng-show="link.subMenu")
+                  a(ng-bind="link.text || ''", href="{{link.href}}", ng-show="!link.subMenu")
               ul.nav.pull-right
                 li(ng-repeat="link in userLinks", ng-show="link.whenLogged == userIsLoggedIn", data-match-route="{{link.regex}}")
                   a(href="{{link.href}}", ng-bind="link.text || ''")
